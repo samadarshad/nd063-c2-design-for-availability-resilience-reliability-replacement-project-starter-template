@@ -1,0 +1,31 @@
+Availability Estimate
+
+1) Minimum RTO for a single AZ outage
+The RDS has multi-AZ synchronization enabled, therefore whenever one AZ fails, automatic failover takes place.
+The minimum time the service will be unavailable is one to two minutes and is all handled automatically by AWS - see https://aws.amazon.com/rds/faqs/ "What happens during Multi-AZ failover and how long does it take?".
+E.g.
+00:00 Failure occurs in a single AZ
+00:00 Failure is automatcally detected and failover has started. 
+00:02 Failover complete
+Minimum RTO = 2 minutes
+
+2) Minimum RTO for a single region outage
+A region outage requires manual intervention to promote the read replica in the secondary region to a standalone database. The promotion process can take several minutes depending on the database size - see https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html "Promoting a read replica to be a standalone DB instance". It also requires stopping transactions to the primary database.
+e.g.
+-00:02 Read replica takes latest copy of primary database
+00:00 Failure occurs in database in a single region. Primary database can no longer recieve or transfer data. Application stops working.
+00:05 Monitor triggers an alert
+00:06 Alert sent to engineering staff
+00:16 Engineering staff notice alert and begin to identify problem
+00:25 Engineering staff begin manual intervention of promoting the read replica as a standalone database
+00:40 Read replica has been promoted
+00:45 Application resumes as normal, and now saves data to the new database
+Minimum RTO = 45 minutes
+
+Therefore the minimum time the service will be unavailable will be longer.
+
+3) Minimum RPO for a single AZ outage
+The RDS contains synchronous replication across the availability zones, therefore there will be neglible data loss upon an outage. For the example in (1), the amount of time of lost data is 0 minutes because the data is always in sync.
+
+4) Minimum RPO for a single region outage
+The database has a read replica which has asynchronous replication with the primary database. Even though the synchronization is more up-to-date than automated backups or manual snapshots (see https://aws.amazon.com/blogs/database/implementing-a-disaster-recovery-strategy-with-amazon-rds/ "Understanding RTO and RPO"), there is still a lag between the read replica and the primary db which means some data is lost when comparing the primary DB with the read replica. For the example in (2), the amount of time of lost data 2 minutes as this is the time the read replica had lagged behind the primary.
