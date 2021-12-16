@@ -1,0 +1,13 @@
+MySQL [udacity]> INSERT INTO example_db (tutorial_id, tutorial_title) VALUES ("202", "Trying to write into db");
+Query OK, 1 row affected (0.03 sec)
+
+MySQL [udacity]> select tutorial_title from example_db;
++-------------------------+
+| tutorial_title          |
++-------------------------+
+| Learn SQL               |
+| Trying to write into db |
++-------------------------+
+2 rows in set (0.01 sec)
+
+MySQL [udacity]> 
