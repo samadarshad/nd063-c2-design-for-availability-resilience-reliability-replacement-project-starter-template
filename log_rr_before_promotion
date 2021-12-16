@@ -1,7 +1,7 @@
 #### CONNECTING TO EC2
 
-samadarshad@Samads-MacBook-Pro udacity % chmod 400 udacity-primary.pem 
-samadarshad@Samads-MacBook-Pro udacity % ssh -i "udacity-primary.pem" ec2-user@ec2-18-215-15-42.compute-1.amazonaws.com
+samadarshad@Samads-MacBook-Pro udacity % chmod 400 udacity-secondary.pem
+samadarshad@Samads-MacBook-Pro udacity % ssh -i "udacity-secondary.pem" ec2-user@ec2-18-188-51-125.us-east-2.compute.amazonaws.com
 
        __|  __|_  )
        _|  (     /   Amazon Linux 2 AMI
@@ -10,9 +10,7 @@ samadarshad@Samads-MacBook-Pro udacity % ssh -i "udacity-primary.pem" ec2-user@e
 https://aws.amazon.com/amazon-linux-2/
 6 package(s) needed for security, out of 14 available
 Run "sudo yum update" to apply all updates.
-[ec2-user@ip-10-1-10-176 ~]$ mysql
--bash: mysql: command not found
-[ec2-user@ip-10-1-10-176 ~]$ sudo yum -y install mysql
+[ec2-user@ip-10-2-10-80 ~]$ sudo yum -y install mysql
 Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
 amzn2-core                                                                                                                                                                                        | 3.7 kB  00:00:00     
 Resolving Dependencies
@@ -48,23 +46,18 @@ Installed:
 
 Complete!
 
-
-
-
 #### CONNECTING TO DATABASE
-[ec2-user@ip-10-1-10-176 ~]$ mysql -u admin -p -h primarydb.cepf8rbtabml.us-east-1.rds.amazonaws.com
+[ec2-user@ip-10-2-10-80 ~]$ mysql -u admin -p -h secondarydb.ckjtohffgzdx.us-east-2.rds.amazonaws.com
 Enter password: 
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
-Your MySQL connection id is 572
+Your MySQL connection id is 279
 Server version: 8.0.23 Source distribution
 
 Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
-MySQL [(none)]> USE udacity
-Database changed
-MySQL [udacity]> show databases;
+MySQL [(none)]> show databases;
 +--------------------+
 | Database           |
 +--------------------+
@@ -76,18 +69,11 @@ MySQL [udacity]> show databases;
 +--------------------+
 5 rows in set (0.00 sec)
 
+MySQL [(none)]> USE udacity
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
 
-
-#### WRITING TO DATABASE
-MySQL [udacity]> CREATE TABLE example_db(tutorial_id INT NOT NULL AUTO_INCREMENT, tutorial_title VARCHAR(100) NOT NULL, PRIMARY KEY ( tutorial_id ) );
-Query OK, 0 rows affected (0.09 sec)
-
-MySQL [udacity]> INSERT INTO example_db
-    -> (tutorial_id, tutorial_title)
-    -> VALUES
-    -> ("101", "Learn SQL");
-Query OK, 1 row affected (0.00 sec)
-
+Database changed
 
 #### READING FROM DATABASE
 MySQL [udacity]> select tutorial_title from example_db;
@@ -98,4 +84,12 @@ MySQL [udacity]> select tutorial_title from example_db;
 +----------------+
 1 row in set (0.00 sec)
 
+#### WRITING TO DATABASE FAILED
+MySQL [udacity]> INSERT INTO example_db
+    -> (tutorial_id, tutorial_title)
+    -> VALUES
+    -> ("202", "Trying to write into db")
+    -> 
+    -> ;
+ERROR 1290 (HY000): The MySQL server is running with the --read-only option so it cannot execute this statement
 MySQL [udacity]> 
