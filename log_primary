@@ -1,0 +1,96 @@
+#### CONNECTING TO EC2
+
+samadarshad@Samads-MacBook-Pro udacity % chmod 400 udacity-primary.pem 
+samadarshad@Samads-MacBook-Pro udacity % ssh -i "udacity-primary.pem" ec2-user@ec2-18-215-15-42.compute-1.amazonaws.com
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux 2 AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-2/
+6 package(s) needed for security, out of 14 available
+Run "sudo yum update" to apply all updates.
+[ec2-user@ip-10-1-10-176 ~]$ mysql
+-bash: mysql: command not found
+[ec2-user@ip-10-1-10-176 ~]$ sudo yum -y install mysql
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+amzn2-core                                                                                                                                                                                        | 3.7 kB  00:00:00     
+Resolving Dependencies
+--> Running transaction check
+---> Package mariadb.x86_64 1:5.5.68-1.amzn2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=========================================================================================================================================================================================================================
+ Package                                          Arch                                            Version                                                      Repository                                           Size
+=========================================================================================================================================================================================================================
+Installing:
+ mariadb                                          x86_64                                          1:5.5.68-1.amzn2                                             amzn2-core                                          8.8 M
+
+Transaction Summary
+=========================================================================================================================================================================================================================
+Install  1 Package
+
+Total download size: 8.8 M
+Installed size: 49 M
+Downloading packages:
+mariadb-5.5.68-1.amzn2.x86_64.rpm                                                                                                                                                                 | 8.8 MB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : 1:mariadb-5.5.68-1.amzn2.x86_64                                                                                                                                                                       1/1 
+  Verifying  : 1:mariadb-5.5.68-1.amzn2.x86_64                                                                                                                                                                       1/1 
+
+Installed:
+  mariadb.x86_64 1:5.5.68-1.amzn2                                                                                                                                                                                        
+
+Complete!
+
+
+
+
+#### CONNECTING TO DATABASE
+[ec2-user@ip-10-1-10-176 ~]$ mysql -u admin -p -h primarydb.cepf8rbtabml.us-east-1.rds.amazonaws.com
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 572
+Server version: 8.0.23 Source distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [(none)]> USE udacity
+Database changed
+MySQL [udacity]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| udacity            |
++--------------------+
+5 rows in set (0.00 sec)
+
+
+#### WRITING TO DATABASE
+MySQL [udacity]> INSERT INTO example_db
+    -> (tutorial_id, tutorial_title)
+    -> VALUES
+    -> ("101", "Learn SQL");
+Query OK, 1 row affected (0.00 sec)
+
+
+#### READING FROM DATABASE
+MySQL [udacity]> select tutorial_title from example_db;
++----------------+
+| tutorial_title |
++----------------+
+| Learn SQL      |
++----------------+
+1 row in set (0.00 sec)
+
